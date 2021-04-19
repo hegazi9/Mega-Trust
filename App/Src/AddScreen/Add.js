@@ -3,19 +3,37 @@ import React, { Component } from 'react';
 import {
     Text, View, ScrollView, TextInput,
     TouchableOpacity, Platform,
-    KeyboardAvoidingView,
-    Image
+    KeyboardAvoidingView, Alert,
+    Image,
 } from 'react-native';
-import { Icon } from 'native-base';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ActionSheet from 'react-native-actionsheet';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-community/async-storage';
+import Realm from 'realm';
 
+let realm;
 
 class Add extends Component {
     constructor(props) {
         super(props);
+        realm = new Realm({
+            path: 'UserDatabase.realm',
+            schema: [
+                {
+                    name: 'user_details',
+                    properties: {
+                        user_id: { type: 'int', default: 0 },
+                        user_name: 'string',
+                        user_title: 'string',
+                        user_type: 'string',
+                        user_url: 'string',
+                        user_location: 'string',
+                        user_description: 'string',
+                    },
+                },
+            ],
+        });
+        realm = new Realm({ path: 'UserDatabase.realm' });
         this.state = {
             name: '', title: '',
             type: '', url: '',
@@ -83,9 +101,7 @@ class Add extends Component {
         for (var i = 0; i < image.length; i++) {
             this.state.img.push({ uri: image[i].path });
         }
-
         console.log(`${JSON.stringify(this.state.img[0].uri)}`);
-        // alert( JSON.stringify( this.state.img[0].uri ))
         if (this.state.img) {
             this.setState({
                 check: true
@@ -93,26 +109,44 @@ class Add extends Component {
         }
     };
 
-    async _add() {
-        if (this.state.name == '' || this.state.description == '' ||  this.state.url == '' || 
-        this.state.company_url == '' ||  this.state.type == '' ||  this.state.title == ''   ) {
+    _add = () => {
+        if (this.state.name == '' || this.state.description == '' || this.state.url == '' ||
+            this.state.company_url == '' || this.state.type == '' || this.state.title == '') {
             alert('Data is Required')
         }
-        else if (this.state.img == '' ) {
+        else if (this.state.img == '') {
             alert('Image is Required')
         }
         else {
-        this.state.arr.push({
-            id : Math.random(),
-            company: this.state.name, 
-            company_logo: this.state.img[0].uri,
-            type: this.state.type, url: this.state.url, created_at: new Date(),
-            location: this.state.location, title: this.state.title, description: this.state.description,
-            how_to_apply: this.state.how_to_apply, company_url: this.state.company_url
-        })
-      await AsyncStorage.setItem('ARR', JSON.stringify(this.state.arr[0]));
-        this.props.navigation.replace('Home');
-    }
+            this.setState({
+                arr: [...this.state.arr,
+                {
+                    id: Math.random(),
+                    company: this.state.name,
+                    company_logo: this.state.img[0].uri,
+                    type: this.state.type, url: this.state.url, created_at: new Date(),
+                    location: this.state.location, title: this.state.title, description: this.state.description,
+                    how_to_apply: this.state.how_to_apply, company_url: this.state.company_url
+                }]
+            })
+            realm.write(() => {
+                var ID =
+                    realm.objects('user_details').sorted('user_id', true).length > 0
+                        ? realm.objects('user_details').sorted('user_id', true)[0]
+                            .user_id + 1
+                        : 1;
+                realm.create('user_details', {
+                    user_id: ID,
+                    user_name: this.state.name,
+                    user_title: this.state.title,
+                    user_type: this.state.type,
+                    user_url: this.state.url,
+                    user_location: this.state.location,
+                    user_description: this.state.description,
+                });
+                console.log(realm.objects('user_details'));
+            });
+        }
     }
 
     render() {
@@ -233,11 +267,16 @@ class Add extends Component {
                                 placeholderTextColor={'gray'}
                                 style={styles.input} />
                         </View>
-                       
 
-                        <TouchableOpacity style={styles.btn} onPress={() => {
-                            this._add()
-                        }}>
+
+                        <TouchableOpacity style={styles.btn}
+                            onPress={async () => {
+                                this._add()
+
+                                await AsyncStorage.setItem('ARR', JSON.stringify(this.state.arr[0]));
+                                await AsyncStorage.setItem('ADD', 'ADD');
+                                await this.props.navigation.replace('Home');
+                            }}>
                             <Text style={styles.txt_btn}>Add </Text>
                         </TouchableOpacity>
 

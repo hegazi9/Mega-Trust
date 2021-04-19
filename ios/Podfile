@@ -10,6 +10,9 @@ target 'MegaTrust' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
+  pod 'RealmJS', :path => '../node_modules/realm'
+
   target 'MegaTrustTests' do
     inherit! :complete
     # Pods for testing

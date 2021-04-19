@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, Platform, ScrollView } from 'react-native';
 import style from './style';
 import { useRoute } from '@react-navigation/native'
 import { WebView } from 'react-native-webview';
@@ -13,7 +13,7 @@ const Details = () => {
     <>
       <View style={style.header}>
         <View style={style.view}>
-          <Text numberOfLines = {2} style={{ fontSize: 18 , width : 120  }}>{route.params.company}</Text>
+          <Text numberOfLines = {2} style={style.txt3}>{route.params.company}</Text>
            <Image resizeMode = "center" style={style.img} 
               source = {{uri : route.params.company_logo}}/>
                
@@ -44,6 +44,9 @@ const Details = () => {
               :
             <WebView 
             style = {{ height : heightPercentageToDP('80%')}}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            startInLoadingState={true}
             source={{
               html: `
               ${route.params.description}    

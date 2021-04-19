@@ -98,7 +98,7 @@ class Login extends Component {
         else if (reg.test(this.state.email) === false) {
             alert('Email is Not Correct')
         }
-        else if (this.state.img == '' ) {
+        else if (this.state.img == '') {
             alert('Image is Required')
         }
 

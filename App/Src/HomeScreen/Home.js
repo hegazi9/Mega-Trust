@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator , Platform} from 'react-native';
 import style from './style';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Get_All_Items } from '../../Actions/_get_all_items';
@@ -7,27 +7,36 @@ import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Icon } from 'native-base';
 
-let Email = null, Password = null, Img = null, ARR = []
+let Email = null, Password = null, Img = null ;
 class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      arr: []
+    this.state= {
+      ARR : []
     }
-    this.arr = []
   }
 
   async componentDidMount() {
     Email = await AsyncStorage.getItem('Email');
     Password = await AsyncStorage.getItem('Password');
     Img = await AsyncStorage.getItem('IMG');
-    let Arr = await AsyncStorage.getItem('ARR');
+    const Arr = await AsyncStorage.getItem('ARR');
+    const LOGIN = await AsyncStorage.getItem('LOGIN');
+    const add = await AsyncStorage.getItem('ADD');
     await this.props.Get_All_Items();
-
-    ARR = [JSON.parse(Arr), ...this.props.items.data]
-
-  }
+    if(Arr == null )
+    {
+      await this.setState({
+        ARR : this.props.items.data
+      })
+    }
+    else {
+      await this.setState({
+        ARR : [JSON.parse(Arr), ...this.props.items.data]
+      })
+    }
+    }
 
   render() {
     return (
@@ -45,7 +54,7 @@ class Home extends Component {
                   <Text>{Password}</Text>
                 </View>
                 <View style={style.view_img}>
-                  <Image style={{ height: 50, width: 50, borderRadius: 30 }} source={{ uri: JSON.parse(Img) }} />
+                  <Image style={style.img1} source={{ uri: JSON.parse(Img) }} />
                 </View>
               </View>
               {
@@ -53,13 +62,12 @@ class Home extends Component {
                   <>
                     <FlatList style={{ height: hp('85%') }}
                       showsHorizontalScrollIndicator={false}
-                      data={ARR}
                       extraData={this.state}
+                      data= {this.state.ARR}
                       keyExtractor={(item) => Math.random().toString()}
                       renderItem={({ item, index }) => (
                         <TouchableOpacity style={style.center}
                           onPress={() => {
-                            alert(item.how_to_apply)
                             this.props.navigation.navigate('Details', {
                               'company': item.company, 'index': index,
                               'company_logo': item.company_logo,

@@ -1,5 +1,5 @@
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Platform, Dimensions } from 'react-native';
+import { Platform } from 'react-native';
 
 
 export default {
@@ -12,46 +12,49 @@ export default {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 2,
-    elevation : 3 , 
-    flexDirection : 'row' 
+    elevation: 3,
+    flexDirection: 'row'
   },
 
-  view : 
+  view:
   {
-    flexDirection : 'row'  , padding : 15 , 
+    flexDirection: 'row', padding: Platform.OS == "ios" ? 30 : 15,
   },
-  view_img :
+  view_img:
   {
-    marginLeft : 'auto' , marginRight : wp('10%') , paddingTop : 5 
+    marginLeft: 'auto', marginRight: wp('10%'), paddingTop: 5
   },
 
-
-  center : 
+  txt3:
+  {
+    fontSize: 18, width: 130, height: 50, width: 120, borderRadius: 30, marginTop: Platform.OS == "ios" ? 10 : 0
+  },
+  center:
   {
     backgroundColor: 'white',
     shadowColor: '#000',
-    padding : 20 ,
-    height : '100%',
-    marginTop : 5 , 
+    padding: 20,
+    height: '100%',
+    marginTop: 5,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 2,
-    elevation : 3 , 
-    borderRadiuos : 20 , 
-    flexDirection : 'row'
+    elevation: 3,
+    borderRadiuos: 20,
+    flexDirection: 'row'
   },
 
-  txt1 : 
+  txt1:
   {
-    fontSize : 16 , marginTop : 2 
+    fontSize: 16, marginTop: 2
   },
-  
-  txt2 : 
+
+  txt2:
   {
-    fontSize : 14 , marginTop : 2 ,color :'gray'
+    fontSize: 14, marginTop: 2, color: 'gray'
   },
-  img : {
-    height : 70 , width : 75, marginLeft : wp('40%') 
+  img: {
+    height: 70, width: 75, marginLeft: wp('40%')
   }
-  
+
 };

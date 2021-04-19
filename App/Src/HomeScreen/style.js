@@ -6,7 +6,7 @@ export default {
 
   header:
   {
-    height: 70,
+    height: Platform.OS == "ios" ? 100 :  70,
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -18,11 +18,11 @@ export default {
 
   view : 
   {
-    flexDirection : 'column'  , padding : 15 
+    flexDirection : 'column'  , padding : 15 , paddingTop : Platform.OS == "ios" ? 40 : 0 
   },
   view_img :
   {
-    marginLeft : 'auto' , marginRight : wp('10%') , paddingTop : 5 
+    marginLeft : 'auto' , marginRight : wp('10%') , paddingTop : 5
   },
 
 
@@ -50,7 +50,7 @@ export default {
     fontSize : 14 , marginTop : 2 ,color :'gray'
   },
   img : {
-    height : 80 , width : 85, marginLeft : 'auto' 
+    height : 80 , width : 85, marginLeft : 'auto' ,
   },
   loading :
   {
@@ -62,6 +62,10 @@ export default {
       alignItems: 'center', justifyContent: 'center', position: 'absolute',
       height: 50, width: 50, borderRadius: 35, top:'90%',right: '10%',
     
+  },
+  img1 : 
+  {
+    height: 50, width: 50, borderRadius: 30 , marginTop : Platform.OS == "ios" ? 30 : 0  
   }
   
 };
