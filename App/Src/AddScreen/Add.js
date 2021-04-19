@@ -29,6 +29,7 @@ class Add extends Component {
                         user_url: 'string',
                         user_location: 'string',
                         user_description: 'string',
+                        user_logo : 'string'
                     },
                 },
             ],
@@ -143,6 +144,8 @@ class Add extends Component {
                     user_url: this.state.url,
                     user_location: this.state.location,
                     user_description: this.state.description,
+                    user_logo: this.state.img[0].uri,
+
                 });
                 console.log(realm.objects('user_details'));
             });
